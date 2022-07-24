@@ -1,0 +1,16 @@
+﻿@model DeckOfCardsLab.Controllers.RedditSimpleResponse
+
+
+
+<p>This is the response from Reddit</p>
+<p>Kind: @Model.kind</p>
+@{
+	if (@Model.data.children?.Length > 0)
+	{
+		<p> The first articles title is: @Model.data.children[0].data.title</p>
+		<br/>
+		<p>The first image for the first article is:</p>
+		<br/>
+		<img src="@Model.data.children[0].data.link_flair_richtext[0].u" />
+	}
+}

@@ -49,7 +49,7 @@ namespace DeckOfCardsLab.Controllers
             string deckId = apiResponse.deck_id;
             int noCardsToDraw = 5;
             string drawDeckOfCardsAPiFormat = $"https://deckofcardsapi.com/api/deck/{deckId}/draw/?count={noCardsToDraw}";
-            
+
 
             var drawCardsResponse = httpClient.GetFromJsonAsync<DeckOfCards_Draw>(drawDeckOfCardsAPiFormat).GetAwaiter().GetResult();
             var displayCardsModel = new DisplayResultsModel();
@@ -57,7 +57,7 @@ namespace DeckOfCardsLab.Controllers
             displayCardsModel.drawResult = drawCardsResponse;
             return View(displayCardsModel);
 
-           
+
         }
         public IActionResult Privacy()
         {
@@ -69,7 +69,44 @@ namespace DeckOfCardsLab.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult DisplayReddit()
+        {
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            const string redditApiUrl = "https://www.reddit.com/r/aww/.json";
+            var apiResponse = httpClient.GetFromJsonAsync<RedditSimpleResponse>(redditApiUrl).GetAwaiter().GetResult();
+            return View(apiResponse);
+        }
+        
     }
+    //lab 2: reddit
+    public class RedditSimpleResponse
+    {
+        public string kind { get; set; }
+        public RedditSimpleResponse_Data data { get; set; }
+    }
+    public class RedditSimpleResponse_Data
+    {
+        public string after { get; set; }
+        public RedditSimpleResponse_Data_Child[] children { get; set; }
+    }
+    public class RedditSimpleResponse_Data_Child
+    {
+        public string kind { get; set; }
+        public RedditSimpleResponse_Data_Child_Data data { get; set; }
+    }
+    public class RedditSimpleResponse_Data_Child_Data
+    {
+        public string title { get; set; }
+        public RedditSimpleResponse_Data_Child_Data_LinkFlairRichText[] link_flair_richtext { get; set; }
+    }
+    public class RedditSimpleResponse_Data_Child_Data_LinkFlairRichText
+    {
+        public string a { get; set; }
+        public string e { get; set; }
+        public string u { get; set; }
+    }
+
     public class DeckOfCards_Draw
     {
         public bool                     success         { get; set; }
